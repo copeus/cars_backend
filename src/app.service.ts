@@ -1,30 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { CarDto } from './car/car.dto';
+import { ManufacturerDto } from './manufacturer/manufacturer.dto';
+import { OwnerDto } from './owner/owner.dto';
+import { DiscountDto } from './discount/discount.dto';
+
+type payloadType = OwnerDto | ManufacturerDto | CarDto | DiscountDto
 
 @Injectable()
 export class AppService {
-  model: any
-  constructor(model: any) {
-    this.model = model;
+  public Entity: any
+  constructor(Entity: any) {
+    this.Entity = Entity
   }
 
   async find(input?: Object) {
     const find = input ? input : {};
-    const query = this.model.find(find);
-    return await query.exec();
+    return await this.Entity.find(find);
   }
 
-  async create(payload: Object) {
-    const mutation = await this.model.create(payload);
-    return mutation;
+  async create(payload: payloadType) {
+    const newCar = this.Entity.create(payload);
+    return await this.Entity.save(newCar);
   }
 
-  async update(id: String, input: Object) {
-    const { nModified } = await this.model.replaceOne({ id }, input);
-    return { modifiedCount: nModified };
+  async update(id: String, payload: payloadType) {
+    return await this.Entity.update(id, payload);
   }
 
-  async delete(id: String) {
-    const { deletedCount } = await this.model.deleteOne({ id });
-    return { deletedCount };
+  async delete(payload: payloadType) {
+    const item = await this.find(payload);
+    return await this.Entity.remove(item);
   }
 }
