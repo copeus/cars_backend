@@ -47,6 +47,11 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Api
+```
+You can use api - localhost:3000/api
+```
+
 ## Test
 
 ```bash
